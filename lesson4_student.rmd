@@ -86,6 +86,17 @@ ggplot(aes(x=age, y=friend_count), data=pf) +
 Notes:
 
 ```{r Alpha and Jitter}
+library(ggplot2)
+pf <- read.csv("dataSets/pseudo_facebook.tsv", sep='\t')
+
+myplot <- ggplot(aes( x=age, y = friendships_initiated), data = pf) + xlim(c(13,90))
+myplot + geom_jitter(alpha = 1/20)
+
+myplot + geom_point(alpha = 1/20) + coord_trans(y="sqrt")
+
+myplot + geom_point(alpha = 1/10, position = 'jitter')
+
+myplot + geom_jitter(alpha = 1/10, position = position_jitter(h = 0))
 
 ```
 
@@ -101,12 +112,34 @@ Notes:
 
 ```{r Conditional Means}
 
+
+library(dplyr)
+age_groups <- group_by(pf, age)
+pf.fc_by_age <- summarise(age_groups,
+          friend_count_mean = mean(friend_count),
+          friend_count_median = median(friend_count),
+          n=n())
+pf.fc_by_age <- arrange(pf.fc_by_age, age)
+head(pf.fc_by_age)
+
+
+pf.fc_by_age <- pf %>% 
+  group_by(age) %>% 
+  summarise(friend_count_mean = mean(friend_count),
+          friend_count_median = median(friend_count),
+          n=n()) %>% 
+  arrange(age)
+
+
+head(pf.fc_by_age, 20)
+
 ```
 
 Create your plot!
 
 ```{r Conditional Means Plot}
-
+ggplot(aes(x = age , y = friend_count_mean), data = pf.fc_by_age) +
+  geom_line() + xlim(c(13,90))
 ```
 
 ***
@@ -115,6 +148,8 @@ Create your plot!
 Notes:
 
 ```{r Overlaying Summaries with Raw Data}
+
+
 
 ```
 
@@ -134,13 +169,14 @@ Notes:
 Notes:
 
 ```{r Correlation}
+cor.test(pf$age, pf$friend_count, method = "pearson")
 
 ```
 
 Look up the documentation for the cor.test function.
 
 What's the correlation between age and friend count? Round to three decimal places.
-Response:
+Response: -0.02740737
 
 ***
 
@@ -162,7 +198,8 @@ Notes:
 Notes:
 
 ```{r}
-
+ggplot(pf, aes(x= likes_received, y= www_likes_received))+geom_point(position = "jitter", alpha = 1/10)+xlim(c(0,quantile(pf$likes_received, .95)))+ylim(c(0,quantile(pf$www_likes_received, .95))) +
+  geom_smooth(method = "lm", color = "red")
 ```
 
 ***
@@ -171,6 +208,7 @@ Notes:
 Notes:
 
 ```{r Strong Correlations}
+
 
 ```
 
