@@ -169,7 +169,7 @@ Notes:
 Notes:
 
 ```{r Correlation}
-cor.test(pf$age, pf$friend_count, method = "pearson")
+cor.test(quantile(pf$age, .95), quantile(pf$friend_count, .95), method = "pearson")
 
 ```
 
@@ -215,7 +215,7 @@ Notes:
 What's the correlation betwen the two variables? Include the top 5% of values for the variable in the calculation and round to 3 decimal places.
 
 ```{r Correlation Calcuation}
-
+cor.test(pf$likes_received, pf$www_likes_received)
 ```
 
 Response:
@@ -233,11 +233,13 @@ Notes:
 ```{r More Caution With Correlation}
 install.packages('alr3')
 library(alr3)
+data(Mitchell)
 ```
 
 Create your plot!
 
 ```{r Temp vs Month}
+ggplot(Mitchell, aes(x = Temp, y = Month)) + geom_point()
 
 ```
 
@@ -245,11 +247,12 @@ Create your plot!
 
 ### Noisy Scatterplots
 a. Take a guess for the correlation coefficient for the scatterplot.
-
+guessed: 0
 b. What is the actual correlation of the two variables?
 (Round to the thousandths place)
 
 ```{r Noisy Scatterplots}
+cor.test(Mitchell$Month, Mitchell$Temp,method = "pearson")
 
 ```
 
@@ -259,7 +262,7 @@ b. What is the actual correlation of the two variables?
 Notes:
 
 ```{r Making Sense of Data}
-
+ggplot(Mitchell, aes(y = Temp, x = Month)) + geom_point() + scale_x_discrete(breaks = seq(0, max(Mitchell$Month), 12))
 ```
 
 ***
