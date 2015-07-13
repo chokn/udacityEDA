@@ -281,6 +281,7 @@ Notes:
 Notes:
 
 ```{r Understanding Noise: Age to Age Months}
+pf$age_with_months <- pf$age + ((12 - pf$dob_month)/12)
 
 ```
 
@@ -289,11 +290,26 @@ Notes:
 ### Age with Months Means
 
 ```{r Age with Months Means}
+library(dplyr)
+# pf.fc_by_age_months <- data.frame(cbind(pf$age_with_months, mean(pf$friend_count), median(as.numeric(pf$friend_count))))
+# colnames(pf.fc_by_age_months)[1] <- "age_with_months"
+# colnames(pf.fc_by_age_months)[2] <- "friend_count_mean"
+# colnames(pf.fc_by_age_months)[3] <- "friend_count_median"
+pf.fc_by_age_months <- group_by(pf, age_with_months) %>% 
+  summarize(friend_count_mean = mean(friend_count), 
+            friend_count_median = median(friend_count),
+            n= n()) %>% 
+  arrange(age_with_months)
+
+head(pf.fc_by_age_months)
 
 ```
 
 Programming Assignment
 ```{r Programming Assignment}
+library(ggplot2)
+ggplot(data = subset(pf.fc_by_age_months,pf.fc_by_age_months$age_with_months < 71), aes(x=age_with_months, y=friend_count_mean)) + geom_point()
+
 
 ```
 
