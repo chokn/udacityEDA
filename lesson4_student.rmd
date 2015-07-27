@@ -308,7 +308,7 @@ head(pf.fc_by_age_months)
 Programming Assignment
 ```{r Programming Assignment}
 library(ggplot2)
-ggplot(data = subset(pf.fc_by_age_months,pf.fc_by_age_months$age_with_months < 71), aes(x=age_with_months, y=friend_count_mean)) + geom_point()
+ggplot(data = subset(pf.fc_by_age_months,pf.fc_by_age_months$age_with_months < 71), aes(x=age_with_months, y=friend_count_mean)) + scale_x_discrete(breaks = seq(min(pf.fc_by_age_months$age_with_months), 71, 1)) + geom_line()
 
 
 ```
