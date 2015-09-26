@@ -42,6 +42,32 @@ ggplot(diamonds.sub, aes(x=volume, y = price)) + geom_point(alpha = 1/10) + geom
 
 #diamonds by clarity
 library(dplyr)
-diamondsByClarity <- group_by(diamonds, clarity)
-# diamondsByClarity$mean_price <- mean(diamondsByClarity$price)
-  
+
+# grp <- group_by(diamonds, clarity)
+# diamondsByClarity$mean_price <- group_by(diamonds, clarity)
+
+diamondsByClarity <- diamonds %>% 
+    group_by(clarity) %>%
+        summarise(mean_price = mean(price),
+              median_price = median(price),
+              min_price = min(price),
+              max_price = max(price),
+              n= n()
+              )
+              
+# Bar Charts of Mean Price
+library(gridExtra)
+library(ggplot2)
+diamonds_by_clarity <- group_by(diamonds, clarity)
+diamonds_mp_by_clarity <- summarise(diamonds_by_clarity, mean_price = mean(price))
+
+diamonds_by_color <- group_by(diamonds, color)
+diamonds_mp_by_color <- summarise(diamonds_by_color, mean_price = mean(price))
+
+# plot1 <- barplot(diamonds_mp_by_color$mean_price, names.arg= diamonds_mp_by_color$color )
+# plot2 <- barplot(diamonds_mp_by_clarity$mean_price, names.arg = diamonds_mp_by_clarity$clarity)             
+
+plot1 <- ggplot(diamonds_mp_by_color, aes(x=color, y = mean_price )) + geom_bar(stat="identity")
+plot2 <- ggplot(diamonds_mp_by_clarity, aes(x=clarity, y = mean_price )) + geom_bar(stat="identity")
+
+grid.arrange(plot1, plot2)
